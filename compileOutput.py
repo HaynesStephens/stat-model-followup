@@ -72,7 +72,7 @@ def compilePhase3(climate_model, crop_model, output_var, coords=[(48.75, 36.25),
     da_out = xr.merge([da_his, da_fut])
     da_out = da_out.sel(time=slice('1981', '2100'))
 
-    savedir = '/project2/moyer/ag_data/ggcmi_phase3/new_ssps'
+    savedir = '/project2/moyer/ag_data/ggcmi_phase3'
     da_out.to_netcdf('{0}/{1}_{2}_w5e5_ssp585_2015soc_2015co2_{3}-mai-noirr_global_annual_1981_2100.nc'.format(savedir, crop_lower, short_name, output_var))
     return True
 
@@ -88,9 +88,12 @@ clim_names = ['gfdl-esm4_r1i1p1f1_w5e5',
               'ukesm1-0-ll_r1i1p1f2_w5e5']
 clim_names = dict(zip(clim_models, clim_names))
 
+crop_models = crop_models = ['ACEA', 'CROVER', 'CYGMA1p74', 'DSSAT-Pythia', 
+                             'EPIC-IIASA', 'ISAM', 'LDNDC', 'LPJmL',
+                             'pDSSAT', 'PEPIC', 'PROMET', 'SIMPLACE-LINTUL5']
+
 def compile_new_GGCMI_phase3(): # Ran on 23.09.18
-    output_vars = ['yield']
-    crop_models = ['PEPIC', 'pDSSAT', 'LPJmL']
+    output_vars = ['yield', 'plantday']
     for crop_model in crop_models:
         print('CROP MODEL: {0}'.format(crop_model))
         for output_var in output_vars:
@@ -111,5 +114,5 @@ def compile_new_GGCMI_phase3(): # Ran on 23.09.18
 ###### MAIN #########
 #####################
 if __name__ == '__main__':
-    getBinsTrueSeason()
+    compile_new_GGCMI_phase3()
 
