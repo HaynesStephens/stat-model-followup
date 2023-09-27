@@ -7,23 +7,23 @@ import argparse
 
 # imports
 from build_dataset import *
-from scipy.stats import uniform as sp_randFloat
-from scipy.stats import randint as sp_randInt
+# from scipy.stats import uniform as sp_randFloat
+# from scipy.stats import randint as sp_randInt
 
-#intel patch to accelerate ml algorithms
-from sklearnex import patch_sklearn
-patch_sklearn()
+# #intel patch to accelerate ml algorithms
+# from sklearnex import patch_sklearn
+# patch_sklearn()
 
-import sklearn
-from sklearn.neural_network import MLPRegressor
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
-print('SKLEARN', sklearn.__version__)
-from sklearn import metrics
-from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
+# import sklearn
+# from sklearn.neural_network import MLPRegressor
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.pipeline import make_pipeline
+# print('SKLEARN', sklearn.__version__)
+# from sklearn import metrics
+# from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
 # import xgboost as xgb
 import xarray as xr, numpy as np, pandas as pd
-
+print('IMPORTS complete.')
 
 #################
 # VARIABLE INPUTS
@@ -36,8 +36,6 @@ weather_agg = ['mean']
 soil_vars = ['texture_class', 'soil_ph', 'soil_caco3']
 output_vars = ['yield', 'plantday']
 ssp = 'ssp585'
-
-print('IMPORTS WORKED!')
 
 
 if __name__ == '__main__':
