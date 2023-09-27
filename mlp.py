@@ -59,9 +59,13 @@ if __name__ == '__main__':
         if 'tas' in var: varout = varout - 273.15
         weather.append(varout)
     
+    print('soils')
     soil = loadSoil()[soil_vars]
+    print('loaded.')
 
+    print('ag')
     ag = loadPBM(clim_name, crop_model, output_vars[0], coords=[(48.75, 36.25), (-103.75, -80.25)])
+    print('loaded.')
 
     # """# Load and format historical data"""
     # ag = '{0}_{1}_w5e5_ssp585_2015soc_2015co2_yield-mai-noirr_global_annual_1981_2100.nc'.format(pbm, cmodel.lower())
