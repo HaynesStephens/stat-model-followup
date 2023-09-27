@@ -26,7 +26,7 @@ from sklearn.pipeline import make_pipeline
 print('SKLEARN', sklearn.__version__)
 from sklearn import metrics
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
-import xgboost as xgb
+# import xgboost as xgb
 import os, json, fnmatch, xarray as xr, numpy as np, plotly.express as px, pandas as pd, matplotlib.pyplot as plt
 from urllib.request import urlopen
 import sklego
