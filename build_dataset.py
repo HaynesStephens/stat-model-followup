@@ -63,8 +63,9 @@ def loadPBM(climate_name, crop_model, output_var, coords=[(48.75, 36.25), (-103.
 def loadSoil():
     soils = '/project2/ggcmi/AgMIP.input/phase3/ISIMIP3/soil/HWSD_soil_data_on_cropland_v2.3.nc'
     soils = xr.open_dataset(soils).sel(lat=slice(48.75, 36.25), lon=slice(-103.8, -80.75))
-    soilvars = ['texture_class', 'soil_ph', 'soil_caco3']#, 'bulk_density', 'cec_soil', 'oc', 'awc', 'sand', 'silt', 'clay', 'gravel', 'ece', 'bs_soil',
-            #'issoil', 'root_obstacles', 'impermeable_layer', 'mu_global', 'lon', 'lat']
+    soilvars = ['texture_class', 'soil_ph', 'soil_caco3', 
+                'bulk_density', 'cec_soil', 'oc', 'awc', 'sand', 'silt', 'clay', 'gravel', 'ece', 'bs_soil',
+                'issoil', 'root_obstacles', 'impermeable_layer', 'mu_global', 'lon', 'lat']
     soils = soils[soilvars]
     return soils
 
