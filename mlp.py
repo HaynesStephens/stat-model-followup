@@ -4,6 +4,7 @@
 # pbm = sys.argv[1]
 # cmodel = int(sys.argv[2])
 import argparse
+import pickle
 
 # imports
 from build_dataset import *
