@@ -45,6 +45,7 @@ if __name__ == '__main__':
     # mdw       = area_mask['Midwest']
     # loaddir = '/content/drive/Shareddrives/GEOS39650/yields/data/rcp_crop_runs/phase3/'
 
+    print('loading weather')
     weather = []
     for var, agg_method in zip(weather_vars, weather_agg):
         varout = loadWeatherDaily(clim_model, clim_name, var, coords=[(48.75, 36.25), (-103.75, -80.25)], ssp=ssp)
@@ -59,14 +60,15 @@ if __name__ == '__main__':
         if 'tas' in var: varout = varout - 273.15
         weather.append(varout)
     weather = xr.merge(weather)
+    print('done')
     
-    print('soils')
+    print('loading soils')
     soil = loadSoil()[soil_vars]
-    print('loaded.')
+    print('done.')
 
-    print('ag')
+    print('loading ag')
     ag = loadPBM(clim_name, crop_model, output_vars[0], coords=[(48.75, 36.25), (-103.75, -80.25)])
-    print('loaded.')
+    print('done.')
 
     # """# Load and format historical data"""
     # ag = '{0}_{1}_w5e5_ssp585_2015soc_2015co2_yield-mai-noirr_global_annual_1981_2100.nc'.format(pbm, cmodel.lower())
@@ -80,6 +82,7 @@ if __name__ == '__main__':
     # # # OR take the anomalies
     # # ag = ag - ag.sel(time=slice('1981','2010')).mean(dim=['time'])
 
+    print('making dataframe')
     ag = ag.to_dataframe().reset_index()
     ag['year'] = ag.time.dt.year
     fe = ag.groupby(['lat','lon'])['yield-mai-noirr'].mean().reset_index().rename(columns={'yield-mai-noirr':'FE'})
@@ -107,14 +110,15 @@ if __name__ == '__main__':
     # Split data into labels & features -- and convert to numpy arrays
     # CUSTOM VARIABLES
     labels = df_train['yield-mai-noirr'].values.flatten()
-    months_incl = np.arange(3,9)
+    months_incl = np.arange(2,10)
     months_excl = np.array([month for month in np.arange(1,13) if month not in months_incl])
-    weather_vars = [var+str(month).zfill(1) for var in weather_vars for month in months_incl]
+    weather_months = [var+'_'+str(month).zfill(1) for var in weather_vars for month in months_incl]
     other_vars = soil_vars
-    df_features = df_train[other_vars+weather_vars]
+    df_features = df_train[other_vars+weather_months]
     print(df_features.columns)
     feature_list=list(df_features.columns)
     features=np.array(df_features)
+    print('done.')
 
     """## Train-test split"""
 
@@ -151,8 +155,10 @@ if __name__ == '__main__':
         return model_tuned
 
     # Run tuning to find optimal hyperparameters.
+    print('tuning model')
     mpl_tuned = getTunedModel(mpl, random_state)
     mpl_tuned.fit(train_features,train_labels)
+    print('done.')
 
     result = pd.DataFrame.from_dict(mpl_tuned.cv_results_)
 
@@ -169,6 +175,7 @@ if __name__ == '__main__':
     # mpl_opt = MLPRegressor(random_state = random_state,
     #                        hidden_layer_sizes = hidden_layer_sizes,
     #                        max_iter = max_iter)
+    print('training optimal model')
     mpl_opt = make_pipeline(
         StandardScaler(),
         MLPRegressor(random_state = random_state,
@@ -178,21 +185,22 @@ if __name__ == '__main__':
 
     # Re-split the dataset (may be unnecessary) and fit with the optimal model.
     mpl_opt.fit(features, labels)
+    print('done.')
 
     # Make historical predictions and plot residuals.
     y_pred = mpl_opt.predict(features)
     residuals = y_pred - labels
 
-    # # Add performance metrics to the blurb output.
-    # blurb = 'RF model (split train-test): 10-iter CV.'
-    # blurb = blurb + '\nGoodness of Fit (R2): {0}'.format(metrics.r2_score(labels, y_pred))
-    # blurb = blurb + '\nMean Absolute Error (MAE): {0}'.format(metrics.mean_absolute_error(labels, y_pred))
-    # blurb = blurb + '\nMean Squared Error (MSE): {0}'.format(metrics.mean_squared_error(labels, y_pred))
-    # blurb = blurb + '\nRoot Mean Squared Error (RMSE): {0}'.format(np.sqrt(metrics.mean_squared_error(labels, y_pred)))
-    # mape = np.mean(np.abs((labels - y_pred) / np.abs(labels+0.001)))
-    # blurb = blurb + '\nMean Absolute Percentage Error (MAPE): {0}'.format(round(mape * 100, 2))
-    # blurb = blurb + '\nAccuracy: {0}'.format(round(100*(1 - mape), 2))
-    # print(blurb)
+    # Add performance metrics to the blurb output.
+    blurb = 'RF model (split train-test): 10-iter CV.'
+    blurb = blurb + '\nGoodness of Fit (R2): {0}'.format(metrics.r2_score(labels, y_pred))
+    blurb = blurb + '\nMean Absolute Error (MAE): {0}'.format(metrics.mean_absolute_error(labels, y_pred))
+    blurb = blurb + '\nMean Squared Error (MSE): {0}'.format(metrics.mean_squared_error(labels, y_pred))
+    blurb = blurb + '\nRoot Mean Squared Error (RMSE): {0}'.format(np.sqrt(metrics.mean_squared_error(labels, y_pred)))
+    mape = np.mean(np.abs((labels - y_pred) / np.abs(labels+0.001)))
+    blurb = blurb + '\nMean Absolute Percentage Error (MAPE): {0}'.format(round(mape * 100, 2))
+    blurb = blurb + '\nAccuracy: {0}'.format(round(100*(1 - mape), 2))
+    print(blurb)
 
     # df_train['pred'] = mpl_opt.predict(features)
     # df_train.loc[df_train["pred"] <= 0.0, "pred"] = 0.0
