@@ -50,7 +50,6 @@ if __name__ == '__main__':
     for var, agg_method in zip(weather_vars, weather_agg):
         varout = loadWeatherDaily(clim_model, clim_name, var, coords=[(48.75, 36.25), (-103.75, -80.25)], ssp=ssp)
         varout = varout.sel(time=slice('1981','2100'))
-        varout = varout.sel(time=varout.time.dt.month.isin(np.arange(3,9)))
         if agg_method=='mean':
             varout = varout.resample(time='1M').mean()
         elif agg_method=='sum':
@@ -101,7 +100,7 @@ if __name__ == '__main__':
 
     # Reset the index
     df.reset_index(inplace=True)
-    df = df.merge(soil.to_dataframe().reset_index(), on=['lat','lon'])
+    w = df.merge(soil.to_dataframe().reset_index(), on=['lat','lon'])
     df = ag.merge(df, on=['year','lat','lon']).dropna()
 
     df_train = df[df.year.isin(np.arange(1981,2011))]
