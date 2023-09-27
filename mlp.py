@@ -58,44 +58,16 @@ if __name__ == '__main__':
             print('WRONG AGG METHOD.')
         if 'tas' in var: varout = varout - 273.15
         weather.append(varout)
+    
+    soil = loadSoil()[soil_vars]
 
-    # def getWeather(cmodel, var, aggmethod='mean'):
-    #     if var=='pr':
-    #         out = '{0}_r1i1p1f1_w5e5_ssp585_{1}_MDW_daily_1971_2100.nc'.format(cmodel.lower(), var)
-    #     else:
-    #         out = '{0}_r1i1p1f1_w5e5_ssp585_{1}_MDW_daily_1981_2100.nc'.format(cmodel.lower(), var)
-    #     out = xr.open_dataarray(loaddir+out).sel(lat=slice(48.75, 36.25), lon=slice(-103.8, -80.75), time=slice('1981','2100')).where(mdw==1)
-    #     out = out.sel(time=out.time.dt.month.isin(np.arange(3,9))).rename(var)
-    #     if aggmethod=='mean':
-    #         out = out.resample(time='1M').mean()
-    #     elif aggmethod=='sum':
-    #         out = out.resample(time='1M').sum()
-    #     else:
-    #         print('WRONG AGG METHOD.')
-    #     return out
-
-    # vpd = getWeather(cmodel, 'vpd', aggmethod='sum')
-    # pr = getWeather(cmodel, 'pr', aggmethod='sum')
-    # hurs = getWeather(cmodel, 'hurs', aggmethod='mean')
-    # tasmax = getWeather(cmodel, 'tasmax', aggmethod='mean') - 273.15
-    # tasmin = getWeather(cmodel, 'tasmin', aggmethod='mean') - 273.15
-    # tas = ((tasmin + tasmax) / 2).rename('tas')
-
-    # weather = xr.merge([vpd,tas,pr,hurs])
-    # # weather = weather - weather.sel(time=slice('1981','2010')).mean(dim=['time'])
-
-    # """## Soils"""
-    # soilvars = ['texture_class', 'soil_ph', 'soil_caco3']#, 'bulk_density', 'cec_soil', 'oc', 'awc', 'sand', 'silt', 'clay', 'gravel', 'ece', 'bs_soil',
-    #             #'issoil', 'root_obstacles', 'impermeable_layer', 'mu_global', 'lon', 'lat']
-    # soils = loaddir+'soils/HWSD_soil_data_on_cropland_v2.3.nc'
-    # soils = xr.open_dataset(soils).sel(lat=slice(48.75, 36.25), lon=slice(-103.8, -80.75)).where(mdw==1)
-    # soils = soils[soilvars]
+    ag = loadPBM(clim_name, crop_model, output_vars[0], coords=[(48.75, 36.25), (-103.75, -80.25)])
 
     # """# Load and format historical data"""
     # ag = '{0}_{1}_w5e5_ssp585_2015soc_2015co2_yield-mai-noirr_global_annual_1981_2100.nc'.format(pbm, cmodel.lower())
     # ag = '{0}ggcmi/{1}/{2}'.format(loaddir, pbm, ag)
     # ag = xr.open_dataarray(ag).sel(lat=slice(48.75, 36.25), lon=slice(-103.8, -80.75)).where(mdw==1).rename('yield_rf')
-    # ag = ag.where((ag > 0))# | (np.isnan(ag)), 0.1)
+    ag = ag.where((ag > 0))# | (np.isnan(ag)), 0.1)
 
     # # # Can log yields
     # # ag = np.log(ag)
