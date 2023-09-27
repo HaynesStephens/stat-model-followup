@@ -29,9 +29,6 @@ from sklearn.model_selection import train_test_split, cross_validate, GridSearch
 # import xgboost as xgb
 import os, json, fnmatch, xarray as xr, numpy as np, plotly.express as px, pandas as pd, matplotlib.pyplot as plt
 from urllib.request import urlopen
-import sklego
-print('SKLEGO', sklego.__version__)
-from sklego.meta import ZeroInflatedRegressor
 
 
 #################
