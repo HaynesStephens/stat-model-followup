@@ -37,7 +37,7 @@ soil_vars = ['texture_class', 'soil_ph', 'soil_caco3']
 output_vars = ['yield', 'plantday']
 ssp = 'ssp585'
 
-
+print('IMPORTS WORKED!')
 
 
 if __name__ == '__main__':
