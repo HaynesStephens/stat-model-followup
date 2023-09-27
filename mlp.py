@@ -1,4 +1,4 @@
-# Create an MPL model based on the Colab notebook
+# Create an mlp model based on the Colab notebook
 # imports
 # import sys
 # pbm = sys.argv[1]
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     """# Tune model hyperparameters"""
 
     # Create a reference model to be tuned.
-    mpl = make_pipeline(
+    mlp = make_pipeline(
         StandardScaler(),
         MLPRegressor(random_state = random_state)
     )
@@ -151,16 +151,16 @@ if __name__ == '__main__':
         print(random_grid)
 
         model_tuned = RandomizedSearchCV(cv=5, estimator = baseModel, param_distributions = random_grid,
-                                        n_iter = 4, verbose=1, random_state=random_state , n_jobs = -1)
+                                        n_iter = 1, verbose=1, random_state=random_state , n_jobs = -1)
         return model_tuned
 
     # Run tuning to find optimal hyperparameters.
     print('tuning model')
-    mpl_tuned = getTunedModel(mpl, random_state)
-    mpl_tuned.fit(train_features,train_labels)
+    mlp_tuned = getTunedModel(mlp, random_state)
+    mlp_tuned.fit(train_features,train_labels)
     print('done.')
 
-    result = pd.DataFrame.from_dict(mpl_tuned.cv_results_)
+    result = pd.DataFrame.from_dict(mlp_tuned.cv_results_)
 
     """# Select best parameters and fit model"""
 
@@ -172,11 +172,11 @@ if __name__ == '__main__':
     hidden_layer_sizes = best_params['mlpregressor__hidden_layer_sizes']
 
     # Create a new model instance with the optimal hyperparameters.
-    # mpl_opt = MLPRegressor(random_state = random_state,
+    # mlp_opt = MLPRegressor(random_state = random_state,
     #                        hidden_layer_sizes = hidden_layer_sizes,
     #                        max_iter = max_iter)
     print('training optimal model')
-    mpl_opt = make_pipeline(
+    mlp_opt = make_pipeline(
         StandardScaler(),
         MLPRegressor(random_state = random_state,
                     hidden_layer_sizes = hidden_layer_sizes,
@@ -184,11 +184,11 @@ if __name__ == '__main__':
     )
 
     # Re-split the dataset (may be unnecessary) and fit with the optimal model.
-    mpl_opt.fit(features, labels)
+    mlp_opt.fit(features, labels)
     print('done.')
 
     # Make historical predictions and plot residuals.
-    y_pred = mpl_opt.predict(features)
+    y_pred = mlp_opt.predict(features)
     residuals = y_pred - labels
 
     # Add performance metrics to the blurb output.
@@ -202,10 +202,10 @@ if __name__ == '__main__':
     blurb = blurb + '\nAccuracy: {0}'.format(round(100*(1 - mape), 2))
     print(blurb)
 
-    # df_train['pred'] = mpl_opt.predict(features)
+    # df_train['pred'] = mlp_opt.predict(features)
     # df_train.loc[df_train["pred"] <= 0.0, "pred"] = 0.0
 
-    # df_pred['pred'] = mpl_opt.predict(df_pred[feature_list].values)
+    # df_pred['pred'] = mlp_opt.predict(df_pred[feature_list].values)
     # df_pred.loc[df_pred["pred"] <= 0.0, "pred"] = 0.0
 
     # ds = xr.merge([df_train.set_index(['year','lat','lon']).to_xarray(),
