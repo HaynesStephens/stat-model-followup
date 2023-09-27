@@ -22,7 +22,6 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
 # import xgboost as xgb
 import xarray as xr, numpy as np, pandas as pd
-from urllib.request import urlopen
 
 
 #################
@@ -43,9 +42,9 @@ print('IMPORTS WORKED!')
 if __name__ == '__main__':
 
     """# Load climate model"""
-    area_mask = xr.open_dataset('/content/drive/Shareddrives/GEOS39650/yields/data/ag_district_mask_coordinates.nc')
-    mdw       = area_mask['Midwest']
-    loaddir = '/content/drive/Shareddrives/GEOS39650/yields/data/rcp_crop_runs/phase3/'
+    # area_mask = xr.open_dataset('/content/drive/Shareddrives/GEOS39650/yields/data/ag_district_mask_coordinates.nc')
+    # mdw       = area_mask['Midwest']
+    # loaddir = '/content/drive/Shareddrives/GEOS39650/yields/data/rcp_crop_runs/phase3/'
 
     weather = []
     for var, agg_method in zip(weather_vars, weather_agg):
