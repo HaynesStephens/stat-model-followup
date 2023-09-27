@@ -85,4 +85,4 @@ if __name__=='__main__':
 
     soils = loadSoil()
     tas = loadWeatherDaily(clim_models[0], clim_names[clim_models[0]], 'tas', coords=[(48.75, 36.25), (-103.75, -80.25)], ssp='ssp585')
-    yields = loadPBM(clim_names[clim_models[0]], crop_models[0], output_vars[0], coords=[(48.75, 36.25), (-103.75, -80.25)])
+    yields = loadPBM(clim_names[clim_models[0]], crop_models[7], output_vars[0], coords=[(48.75, 36.25), (-103.75, -80.25)])
