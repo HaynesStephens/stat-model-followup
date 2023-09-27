@@ -6,12 +6,6 @@
 import argparse
 
 # imports
-import numpy as np
-import pandas as pd
-import pickle
-import os
-import datetime
-import pytz
 from scipy.stats import uniform as sp_randFloat
 from scipy.stats import randint as sp_randInt
 
@@ -27,7 +21,7 @@ print('SKLEARN', sklearn.__version__)
 from sklearn import metrics
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
 # import xgboost as xgb
-import os, json, fnmatch, xarray as xr, numpy as np, plotly.express as px, pandas as pd, matplotlib.pyplot as plt
+import xarray as xr, numpy as np, pandas as pd
 from urllib.request import urlopen
 
 
